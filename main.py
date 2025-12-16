@@ -12,7 +12,7 @@ TIMEOUT = 30
 MAX_TOKENS = 1000
 
 def main():
-    model = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite",
+    model = ChatGoogleGenerativeAI(model="gemini-3.0-pro",
                                    temperature = TEMPERATURE,
                                    timeout = TIMEOUT,
                                    max_tokens = MAX_TOKENS
