@@ -12,11 +12,11 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if api_key:
-    # API Yapılandırmasını güncelle (transport='rest' eklemek bağlantıyı garantiye alır)
+   # API Yapılandırmasını v1 sürümüne ve REST protokolüne sabitle
     genai.configure(api_key=api_key, transport='rest')
 
-    # Model ismini tam yol olarak tanımla
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    # Modeli tam kütüphane yoluyla ve v1 sürümüyle çağır
+    model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 
 else:
