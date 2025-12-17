@@ -4,6 +4,14 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 
+# Mevcut modelleri kontrol etme kodu
+try:
+    for m in genai.list_models():
+        if 'generateContent' in m.supported_generation_methods:
+            print(f"Kullanılabilir Model: {m.name}")
+except Exception as e:
+    print(f"Modeller listelenirken hata: {e}")
+
 # 1. SAYFA AYARLARI (Mutlaka en üstte olmalı)
 st.set_page_config(page_title="T.C. Anayasa AI", layout="wide", page_icon="⚖️")
 
@@ -87,3 +95,4 @@ if prompt := st.chat_input("Hukuki sorunuzu veya vaka özetini girin..."):
     
     # Asistan cevabını geçmişe kaydet
     st.session_state.messages.append({"role": "assistant", "content": full_response})
+    # Kullanılabilir modelleri listelemek için bu kodu geçici olarak ekle
