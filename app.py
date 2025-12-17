@@ -12,9 +12,12 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if api_key:
-    genai.configure(api_key=api_key)
-    # Sadece 'gemini-1.5-flash' yerine tam yolu yazıyoruz:
+    # API Yapılandırmasını güncelle (transport='rest' eklemek bağlantıyı garantiye alır)
+    genai.configure(api_key=api_key, transport='rest')
+
+    # Model ismini tam yol olarak tanımla
     model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+
 else:
     st.error("⚠️ API Key bulunamadı! Lütfen Secrets veya .env dosyasını kontrol edin.")
 
