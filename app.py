@@ -16,7 +16,8 @@ if api_key:
     genai.configure(api_key=api_key, transport='rest')
 
     # Model ismini tam yol olarak tanımla
-    model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-1.0-pro")
+
 
 else:
     st.error("⚠️ API Key bulunamadı! Lütfen Secrets veya .env dosyasını kontrol edin.")
