@@ -11,7 +11,13 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Dosya Seç (PDF/TXT)", type=["pdf", "txt"])
     
     if uploaded_file:
-        st.success(f"{uploaded_file.name} yüklendi! İşleniyor...")
+        with st.status("Doküman analiz ediliyor...", expanded=True) as status:
+            st.write("Metinler ayıklanıyor...")
+            time.sleep(1) # İşlem süresi simülasyonu
+            st.write("Vektör veritabanına taranıyor...")
+            time.sleep(1)
+            status.update(label="Analiz Tamamlandı!", state="complete", expanded=False)
+        st.success(f"✅ {uploaded_file.name} hazır.")
         # BURADA: Arka plandaki RAG sistemine dosya gönderilecek.
     
     st.divider()
