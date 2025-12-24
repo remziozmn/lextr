@@ -26,3 +26,5 @@ env/
 .env.*.local
 .flaskenv
 secrets.json
+venv/
+__pycache__/
