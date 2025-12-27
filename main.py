@@ -150,11 +150,26 @@ class CezaDavasi(Dava):
         self.karar1()
         self.karar2()
 
+    def _json_temizle(self, metin: str) -> dict:
+        """Yardımcı Fonksiyon: Gemini çıktısını temizleyip JSON'a çevirir."""
+        try:
+            # Markdown bloklarını temizle (```json ... ```)
+            temiz_metin = metin.strip()
+            if "```json" in temiz_metin:
+                temiz_metin = temiz_metin.split("```json")[1].split("```")[0]
+            elif "```" in temiz_metin:
+                temiz_metin = temiz_metin.split("```")[1].split("```")[0]
+            
+            return json.loads(temiz_metin.strip())
+        except Exception as e:
+            print(f"JSON Ayrıştırma Hatası: {e}")
+            # Hata olursa boş bir yapı döndür ki sistem çökmesin
+            return {"olay": metin, "onyargi": "Analiz edilemedi"}
+
     def iddianame_isleme(self) -> dict:
         """
         İddianameyi POML yapısıyla işleyerek hukuki önyargıları ayıklar.
         """
-        # --- POML Prompt Başlangıcı ---
         poml_prompt = f"""
         <poml>
             <role>Uzman Ceza Hukukçusu ve Metin Analisti</role>
@@ -165,7 +180,7 @@ class CezaDavasi(Dava):
             <instructions>
                 1. Metindeki 'vahşice', 'sinsi', 'canice' gibi sıfatları 'onyargi' etiketine al.
                 2. Sadece fiziksel eylemleri (kim, neyi, nerede, nasıl yaptı) 'olay' etiketine al.
-                3. Çıktıyı JSON formatında ver.
+                3. Çıktıyı SADECE JSON formatında ver, başka açıklama yapma.
             </instructions>
             <output_format>
                 {{
@@ -175,11 +190,8 @@ class CezaDavasi(Dava):
             </output_format>
         </poml>
         """
-        # --- LLM Çağrısı ---
         response = self.llm_model.invoke([HumanMessage(content=poml_prompt)])
-        
-        # SADECE BURASI DÖNMELİ (Eski return'leri sil)
-        return json.loads(response.content)
+        return self._json_temizle(response.content)
 
     def ifade_isleme(self) -> dict:
         """
@@ -195,6 +207,7 @@ class CezaDavasi(Dava):
             <instructions>
                 1. 'Mecbur kaldım', 'hak etti', 'istemeden oldu' gibi niyet beyanlarını 'onyargi' kısmına al.
                 2. Failin kabul ettiği fiziksel temas ve eylemleri 'olay' kısmına al.
+                3. Çıktıyı SADECE JSON formatında ver, başka açıklama yapma.
             </instructions>
             <output_format>
                 {{
@@ -205,7 +218,7 @@ class CezaDavasi(Dava):
         </poml>
         """
         response = self.llm_model.invoke([HumanMessage(content=poml_prompt)])
-        return json.loads(response.content)
+        return self._json_temizle(response.content)
     
 
     def hibrit_dilekce_isleme(self):
